@@ -2,7 +2,7 @@
 RTL to GDS flow using openlane
 <details>
 <summary>openlane and sky130 PDK</summary>
-# DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK
+
 
 The core of the chip will contain two types of blocks:
  - **Foundry IP Blocks** (e.g. ADC, DAC, PLL, and SRAM) = blocks which requires some amount of intelligent techniques to build which can only be designed by foundries.
@@ -24,13 +24,13 @@ Open Source Digital ASIC Design requires three open-source components:
 3.  Yosys takes the RTL design and timing .libs and verilog models of standard cells and converts into a RTL Netlist.
 4.  abc does the tehnology mapping to the required skywater-pdk variants
 
-1.1 Synthesis Strategies
+#### Synthesis Strategies
 Different strategies can be used to synthesize for the either the least area or the best timing. To analyse this, synthesis exploration utility generates a report showing the effect on delays/timing/area et.,
 
-1.2 Deign Exploration Utility
+#### Deign Exploration Utility
 This is used to suit the design configuration and generate reports with different metrics to select the best. This is also used for regression testing
 
-1.3 Design For Test - DFT Insertion
+#### Design For Test - DFT Insertion
 1. in a real chip once fabricated we  need to check for manufacturing defects
 2. we cannot test individual blocks in an soc thus we need to design the chip such that it can be tested out later
 3. DFT is done using scan chains we do this by modifying the flip flop such that it has extra inputs and we can pass test signals to check the functionality of the flip flop
@@ -45,15 +45,9 @@ This is used to suit the design configuration and generate reports with differen
 1. When several blocks tap power from a single source, there is a problem of Voltage Drop at the Vdd and Ground source at the Vss which can again push the logic out of the required noise margin into the undefined state.
 2. To mitigate this Vdd and Vss are placed as horizontal and vertical strips in the chip so that the blocks can tap power from the nearest source.
 3. in power grid creation
-   a) first rings are created
-   b) then stripes are created
-   c) then rails are created
-### rings:
-vdd and vss rings are formed across core and macro
-### stripes:
-they carry vdd and vss across the chip
-### rails:
-connect vdd and vss to the standard cell
+   1. **rings**:vdd and vss rings are formed across core and macro
+   2. **stripes**: they carry vdd and vss across the chip
+   3. **rails** :connect vdd and vss to the standard cell
 
 ## Placement
 There are two types of placement. The other required logic is placed optimally. Placement is of two steps
