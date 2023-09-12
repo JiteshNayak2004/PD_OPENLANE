@@ -3,6 +3,20 @@ RTL to GDS flow using openlane
 <details>
 <summary>openlane and sky130 PDK</summary>
 
+### fundametals of chip structure
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/25b52c27-5094-4118-b6b5-b2607c626e9f)
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/c2274d58-299e-413e-afb6-d7325d4fc7a7)
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/6d6b67fc-8e0c-4bc4-ba2c-449bd761202d)
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/cc1f40df-48b1-4b9f-9394-6a00e09d0b78)
+
+PADS - the ways signal comes inside or goes outside
+CORE - all the digital logic recides
+DIE - size of the chip
+we call the above as a package and not a chip
 
 The core of the chip will contain two types of blocks:
  - **Foundry IP Blocks** (e.g. ADC, DAC, PLL, and SRAM) = blocks which requires some amount of intelligent techniques to build which can only be designed by foundries.
@@ -34,6 +48,7 @@ This is used to suit the design configuration and generate reports with differen
 1. in a real chip once fabricated we  need to check for manufacturing defects
 2. we cannot test individual blocks in an soc thus we need to design the chip such that it can be tested out later
 3. DFT is done using scan chains we do this by modifying the flip flop such that it has extra inputs and we can pass test signals to check the functionality of the flip flop
+4. we do this using an open source tool called fault
 
 ## Floor Planning 
 1. This is done by OpenROAD flow The macros and IPs are placed in the core before proceding further This is called as pre-placement. 
