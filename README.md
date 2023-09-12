@@ -5,18 +5,19 @@ RTL to GDS flow using openlane
 
 ### fundametals of chip structure
 
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/25b52c27-5094-4118-b6b5-b2607c626e9f)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/8ba7b58c-0580-43ec-aaed-bc877bb9ff21)
 
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/c2274d58-299e-413e-afb6-d7325d4fc7a7)
 
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/6d6b67fc-8e0c-4bc4-ba2c-449bd761202d)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/eb5c48b1-91c2-4f2f-9df3-e929a357cc5e)
 
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/cc1f40df-48b1-4b9f-9394-6a00e09d0b78)
 
-PADS - the ways signal comes inside or goes outside
-CORE - all the digital logic recides
-DIE - size of the chip
 we call the above as a package and not a chip
+
+1. PADS - the ways signal comes inside or goes outside
+2. CORE - all the digital logic recides
+3. DIE - size of the chip
+
 
 The core of the chip will contain two types of blocks:
  - **Foundry IP Blocks** (e.g. ADC, DAC, PLL, and SRAM) = blocks which requires some amount of intelligent techniques to build which can only be designed by foundries.
