@@ -317,7 +317,7 @@ Core is where the logic blocks are placed and this seats at the center of the di
 2. It's important because it affects how well signals move around, how little they get messed up, and how easy it is to build and test the device.
 3. We have to think about things like keeping the signals strong, spreading out power evenly, managing heat, and making sure it fits with standard connectors and packaging.
 4. When we do this pin placement right, it makes the electronic system more reliable, easier to build, and more user-friendly.
-
+s
 
    
 </details>
