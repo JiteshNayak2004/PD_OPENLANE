@@ -127,25 +127,30 @@ Inside a specific design folder contains a `config.tcl` which overrides the defa
 
 
 <details>
- <summary>lab for day 1</summary>
+<summary>lab for day 1</summary>
 
+tool files
 
- tool files 
 ![p1](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/84de87c9-bc7b-487d-9cb0-bc21f8e52575)
 
 process files
+
 ![Screenshot from 2023-09-14 18-47-36](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/f2c8e77b-80a9-4e35-b8bf-0313fc2bd8d8)
 
 running openlane
+
 ![Screenshot from 2023-09-14 18-52-02](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/3a4e6512-b358-4dae-9a8c-d072a004d91c)
 
 design setup stage
+
 ![Screenshot from 2023-09-14 18-53-49](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/94693ab5-7019-4639-a652-2079dfd768b7)
 
 we see runs being executed
+
 ![Screenshot from 2023-09-14 18-58-09](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/d9ef08b5-1b59-4b7a-b787-6e42693d5012)
 
 synthesizing picorv32 on openlane
+
 ![Screenshot from 2023-09-14 19-05-44](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/a2237d3f-807e-44f3-9b7e-bdd7ada36a18)
 
 
