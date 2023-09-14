@@ -306,9 +306,10 @@ Core is where the logic blocks are placed and this seats at the center of the di
 1. Power planning in integrated circuit (IC) design involves the careful consideration and distribution of power and ground connections to ensure proper functionality and performance of the chip.
 2. One important aspect of power planning is the placement of multiple ground (GND) and supply voltage (VDD) points throughout the IC layout.
 3. The need for multiple GND and VDD points arises due to several reasons by providing multiple GND and VDD points, the power can be distributed more evenly throughout the chip, reducing the chances of voltage drops and improving overall power delivery efficiency.
-4.  Ground bounce occurs when there are variations in the voltage levels of different GND points due to transient currents.
-5.  Similarly, power supply noise refers to fluctuations in the VDD levels caused by switching events.
-6.  By strategically placing multiple GND and VDD points, the impact of ground bounce and power supply noise can be minimized, improving circuit performance and reducing the risk of functional failures.
+4. Ground bounce occurs when there are variations in the voltage levels of different GND points due to transient currents. This current flow to the ground creates an inductive effect,
+   which causes the ground voltage to rise or fall momentarily which can lead to logic's in ckts to change for a moment
+6. Similarly, power supply noise refers to fluctuations in the VDD levels caused by switching events.
+7. By strategically placing multiple GND and VDD points, the impact of ground bounce and power supply noise can be minimized, improving circuit performance and reducing the risk of functional failures.
 
 
 ### pin placement
@@ -316,6 +317,8 @@ Core is where the logic blocks are placed and this seats at the center of the di
 2. It's important because it affects how well signals move around, how little they get messed up, and how easy it is to build and test the device.
 3. We have to think about things like keeping the signals strong, spreading out power evenly, managing heat, and making sure it fits with standard connectors and packaging.
 4. When we do this pin placement right, it makes the electronic system more reliable, easier to build, and more user-friendly.
+
+
    
 </details>
 
