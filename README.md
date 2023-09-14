@@ -275,6 +275,47 @@ Flop ratio = Number of D Flip flops = 1596  = 0.1579
 
 
 After running synthesis, inside the `runs/[date]/results/synthesis` is `picorv32a_synthesis.v` which is the mapping of the netlist to standard cell library using ABC. The `runs/[date]/reports/synthesis` will contain synthesis statistic reports and static timing analysis reports. The `runs/[date]/synthesis/logs` contains log files for the terminal output dumps for running yosys and OpenSTA.
-
-
 </details>
+
+<details>
+ <summary>Good FLoorplan vs Bad Floorplan and intro to library cells </summary>
+## floor plan stage
+
+### Find height and width of core and die.
+Core is where the logic blocks are placed and this seats at the center of the die. The width and height depends on dimensions of each standard cells on the netlist. Utilization factor is (area occupied by netlist)/(total area of the core). In practical scenario, utilization factor is 0.5 to 0.6. This is space occupied by netlist only, the remaining space is for routing and more additional cells. Aspect ratio is (height)/(width) of core, so only aspect ratio of 1 will produce a square core shape.
+
+### Define location of Preplaced Cell.
+
+1. These are reusable complex logicblocks or modules or IPs or macros that is already implemented (memory, clock-gating cell, mux, comparator...) . The placement on the core is user-defined and must be done before placement and routing (thus preplaced cells). The automated place and route tools will not be able to touch and move these preplaced cells so this must be very well defined
+
+2. Surround preplaced cells with decoupling capacitors.The complex preplaced logicblock requires a high amount of current from the powersource for current switching. But since there is a distance between the main powersource and the logicblock, there will be voltage drop due to the resistance and inductance of the wire. This might cause the voltage at the logicblock to be not within the noise margin range anymore (logic is unstable). The solution is to use decoupling capacitors near the logic block, this capacitor will send enough current needed by the logicblock to switch within the noise margin range.
+
+#### decoupling capacitors
+1. The purpose of the decoupling capacitor is to charge the circuit. When a switching activity occurs, the decoupling capacitor transfers some of its charge to the circuit.
+2. Decoupling capacitors are large capacitors that store electrical charge. They have a voltage across them similar to that of the power supply
+3. When a circuit switches, the decoupling capacitor acts as a power source for the circuit, effectively isolating it from the main power supply. During switching events, the decoupling capacitor supplies the necessary current to the circuit
+4. to minimize voltage drops, these capacitors are positioned in close proximity to the circuit. They ensure that the circuit receives the required current during switching operations. 
+5. During periods of no switching activity, the decoupling capacitor replenishes its charge from the power supply
+6. decoupling caps also help in  mitigating noise and maintaining consistent voltage for delicate components.
+7. As electronic apparatuses operate at elevated frequencies, abrupt shifts in current demands can incite voltage fluctuations and unwanted noise,
+   thereby resulting in performance dilemmas and signal deterioration.
+9. Decoupling capacitors, akin to a safeguard, establish a local storehouse of electrical charge that can swiftly respond to these fluctuations.
+   Essentially, they act as reservoirs, storing and disbursing electrical energy as required, effectively sieving out undesirable noise and voltage oscillations.
+   
+### power planning
+1. Power planning in integrated circuit (IC) design involves the careful consideration and distribution of power and ground connections to ensure proper functionality and performance of the chip.
+2. One important aspect of power planning is the placement of multiple ground (GND) and supply voltage (VDD) points throughout the IC layout.
+3. The need for multiple GND and VDD points arises due to several reasons by providing multiple GND and VDD points, the power can be distributed more evenly throughout the chip, reducing the chances of voltage drops and improving overall power delivery efficiency.
+4.  Ground bounce occurs when there are variations in the voltage levels of different GND points due to transient currents.
+5.  Similarly, power supply noise refers to fluctuations in the VDD levels caused by switching events.
+6.  By strategically placing multiple GND and VDD points, the impact of ground bounce and power supply noise can be minimized, improving circuit performance and reducing the risk of functional failures.
+
+
+### pin placement
+1. Pin placement in physical design is all about how and where we put the input/output pins on a chip or circuit board. 
+2. It's important because it affects how well signals move around, how little they get messed up, and how easy it is to build and test the device.
+3. We have to think about things like keeping the signals strong, spreading out power evenly, managing heat, and making sure it fits with standard connectors and packaging.
+4. When we do this pin placement right, it makes the electronic system more reliable, easier to build, and more user-friendly.
+   
+</details>
+
