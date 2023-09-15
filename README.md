@@ -319,6 +319,8 @@ Core is where the logic blocks are placed and this seats at the center of the di
 3. We have to think about things like keeping the signals strong, spreading out power evenly, managing heat, and making sure it fits with standard connectors and packaging.
 4. When we do this pin placement right, it makes the electronic system more reliable, easier to build, and more user-friendly.
 
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/4ce61e33-1955-48e4-8a55-d834ab544a9a)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/b8930ea2-483d-466a-be27-27abb4d2f767)
 
    
 </details>
