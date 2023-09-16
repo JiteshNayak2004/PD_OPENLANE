@@ -752,22 +752,22 @@ run
 
 Using this transient response, we will now characterize the cell's slew rate and propagation delay:  
 - Rise Transition [output transition time from 20%(0.66V) to 80%(2.64V)]:
-    - **Tr_r = 2.19981ns - 2.15739ns = 0.04242 ns**  
+**Tr_r = 2.19981ns - 2.15739ns = 0.04242 ns**  
 ![image](https://user-images.githubusercontent.com/87559347/188260029-84633ed7-446e-4d1b-b723-12397dcfc71a.png)  
 
 
 - Fall Transition [output transition time from 80%(2.64V) to 20%(0.66V)]:
-   - **Tr_f = 4.0672ns - 4.04007ns = 0.02713ns**   
+- **Tr_f = 4.0672ns - 4.04007ns = 0.02713ns**   
 ![image](https://user-images.githubusercontent.com/87559347/188260236-4cc5d4c7-654a-4600-a277-9f6c1df63b11.png)
 
 
 - Rise Delay [delay between 50%(1.65V) of input to 50%(1.65V) of output]:
-   - **D_r = 2.18197ns - 2.15003ns = 0.03194ns**   
+**D_r = 2.18197ns - 2.15003ns = 0.03194ns**   
 ![image](https://user-images.githubusercontent.com/87559347/188261194-395c7cfd-caea-4efa-a670-310cb30ff6a2.png)
 
 
 - Fall Delay [delay between 50%(1.65V) of input to 50%(1.65V) of output]:
-   - **D_f = 4.05364ns - 4.05001ns =0.00363ns**  
+**D_f = 4.05364ns - 4.05001ns =0.00363ns**  
 ![image](https://user-images.githubusercontent.com/87559347/188261518-792d3e99-6a5a-423d-9309-62287c608ec0.png)
 
 
@@ -797,19 +797,26 @@ then type ``` cif see VIA2``` in tkcon prompt
 
 ## fixing drc errors
 
-3. Open magic with `poly.mag` as input: `magic poly.mag`. Focus on `Incorrect poly.9` layout. As described on the poly.9 [design rule of SKY130 PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#poly), the spacing between polyresistor with poly or diff/tap must at least be 0.480um. Using `:box`, we can see that the distance is 0.250um YET there is no DRC violations shown. Our goal is to fix the tech file to include that DRC.  
+1. Open magic with `poly.mag` as input: `magic poly.mag`. Focus on `Incorrect poly.9` layout.
+2. As described on the poly.9 [design rule of SKY130 PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#poly), the spacing between polyresistor with poly or diff/tap must at least be 0.480um.
+3. Using `:box`, we can see that the distance is 0.250um YET there is no DRC violations shown. Our goal is to fix the tech file to include that DRC.  
 ![image](https://user-images.githubusercontent.com/87559347/188370620-7e802ce0-cd15-4385-9b73-d8f5ee5fe8ae.png)
 
-4. Open `sky130A.tech`. The included rules for poly.9 are only for the spacing between the n-poly resistor with n-diffusion and the spacing between the p-poly resistor with diffusion. We will now add new rules for the spacing between the **poly resistor with poly non-resistor**, highlighted green below are the two added rules. On the left is the rule for spacing between n-poly resistor with poly non-resistor and on the right is the rule for the spacing between the p-poly resistor with poly non-resistor. The `allpolynonres` is a macro under `alias` section of techfile. 
+4. Open `sky130A.tech`. The included rules for poly.9 are only for the spacing between the n-poly resistor with n-diffusion and the spacing between the p-poly resistor with diffusion.
+5. We will now add new rules for the spacing between the **poly resistor with poly non-resistor**,
+6. highlighted green below are the two added rules.
+7. On the left is the rule for spacing between n-poly resistor with poly non-resistor and on the right is the rule for the spacing between the p-poly resistor with poly non-resistor. The `allpolynonres` is a macro under `alias` section of techfile. 
 ![image](https://user-images.githubusercontent.com/87559347/188374444-4999b439-40ab-42ae-91cd-91017c217f3e.png)
 
-5. Run `tech load sky130A.tech` then `drc check` in tkcon to reload the tech file. The new DRC rules will now take effect.Notice the white dots on the poly indicating the design rule violations. Command `drc find` to iterate in each violations.  
+8. Run `tech load sky130A.tech` then `drc check` in tkcon to reload the tech file.
+9.  The new DRC rules will now take effect notice the white dots on the poly indicating the design rule violations.
+10.   Command `drc find` to iterate in each violations.  
 ![image](https://user-images.githubusercontent.com/87559347/188373919-e9d1bd08-7c50-400a-9a17-65fa4296c82e.png)
 
-6. Next, notice below that there are violations between N-substrate diffusion with the polyresistors (from left: npolyres, ppolyres, xpolyres) which is good. But between npolyres with P-substrate diffusion, there is no violation shown. 
+11. Next, notice below that there are violations between N-substrate diffusion with the polyresistors (from left: npolyres, ppolyres, xpolyres) which is good. But between npolyres with P-substrate diffusion, there is no violation shown. 
 ![image](https://user-images.githubusercontent.com/87559347/188421029-0f94f6c8-8fc7-4aab-b895-05de5de40f7c.png)
 
-7. To fix that, just modify the tech file to include not only the spacing between npolyres with N-substrate diffusion in poly.9 but between **npolyres and all types of diffusion**. `alldif` is also a macro under `alias` section. Load the tech file again, the new DRC will now take effect.  
+12. To fix that, just modify the tech file to include not only the spacing between npolyres with N-substrate diffusion in poly.9 but between **npolyres and all types of diffusion**. `alldif` is also a macro under `alias` section. Load the tech file again, the new DRC will now take effect.  
 ![image](https://user-images.githubusercontent.com/87559347/188384339-225f2a84-8aca-44c6-b742-272448051fc9.png)  
 ![image](https://user-images.githubusercontent.com/87559347/188421488-3d84c048-06b3-46ac-9816-513dd7c721f2.png)
 
