@@ -670,17 +670,27 @@ The output of the layout is the LEF file. [LEF (Library Exchange Format)](https:
 The task is to characterize a sample inverter cell by its slew rate and propagation delay.  
 
 1. Clone [vsdstdcelldesign](https://github.com/nickson-jose/vsdstdcelldesign). Copy the techfile `sky130A.tech` from `pdks/sky130A/libs.tech/magic/` to directory of the cloned repo. Below are the contents of `vsdstdcelldesign/libs/`:
-![image](https://user-images.githubusercontent.com/87559347/187333491-7fd10850-9f8a-486d-9d4c-a93f4002fdea.png)
 
 
 2. View the mag file using magic `magic -T sky130A.tech sky130_inv.mag &`:  
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/f10fb291-02eb-4896-814e-9638d512d26e)
 
-![image](https://user-images.githubusercontent.com/87559347/183270193-c3e58fcd-951a-4d29-8856-921de11e7903.png)
+4. We can get to know the details of the inverter by hovering the mouse cursor over it and pressing 's' on the keyboard. Then we can type
+**what** in the tkcon
+ ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/ca9955a6-5aae-48a2-8e60-03cf13517b2a)
 
-3. Make an extract file `.ext` by typing `extract all` in the tkon terminal. 
-4. Extract the `.spice` file from this ext file by typing `ext2spice cthresh 0 rthresh 0` then `ext2spice` in the tcon terminal.  
+5. Pressing 's' three times will show what parts are connected to the selected part
+6. We shall look at the difference between LEF and Layout. The above image is a Layout
+7. LEF represents abstract component data in a machine-readable format for IC libraries, while layout is the physical geometric arrangement of these components on a semiconductor chip.
+8. DRC errors in magic will be highlighted with white dotted lines:
+   ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/ddf4ee1c-9a2f-43f9-b750-887eb6fedfe0)
 
-![image](https://user-images.githubusercontent.com/87559347/188252410-0f71a30b-b05e-4ddb-9d95-2fd40712825d.png)
+   
+9. Make an extract file `.ext` by typing `extract all` in the tkon terminal. 
+10. Extract the `.spice` file from this ext file by typing `ext2spice cthresh 0 rthresh 0` then `ext2spice` in the tcon terminal.
+11. ext2spice cthresh 0 rthresh 0 -> this is done to copy the parasitic capacitances
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/c893924b-7085-4d70-adce-4079b0f5a4fa)
+
 
 We then modify the spice file to be able to plot a transient response:
 
