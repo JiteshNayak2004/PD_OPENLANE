@@ -484,7 +484,7 @@ Low transition time = time(slew_high_fall_thr) - time (slew_low_fall_thr)
 <details>
  <summary>Design library cell using Magic Layout and ngspice </summary>
 
-
+### customizing openlane configuration
 
 1. Configurations on OpenLANE can be changed on the flight.
 2. openlane/config has a readme witch description on all switches go to the floorplan section
