@@ -507,8 +507,10 @@ Low transition time = time(slew_high_fall_thr) - time (slew_low_fall_thr)
  - Syntax for the PMOS and NMOS descriptiom:
      - `[component name] [drain] [gate] [source] [substrate] [transistor type] W=[width] L=[length]`
  - All components are described based on nodes and its values
+ -  cload out 0 10pf means cload is connected b/w node out and 0 and has value 10pf
  - `.op` is the start of SPICE simulation operation where Vin will be sweep from 0 to 2.5 with 0.5 steps
  - `tsmc_025um_model.mod` is the model file containing the technological parameters for the 0.25um NMOS and PMOS
+   
 The steps to simulate in SPICE:
 ```
 source [filename].cir
@@ -519,7 +521,8 @@ plot out vs in
 ```  
 
 ## SPICE Analysis for Switching Threshold and Propagation Delay:
-CMOS robustness depends on:  
+CMOS is a robust device for logic application as the vtc curve is high for low i/p 
+and low for high i/p the robustness of cmos inverter depends on:  
 
 ## Switching threshold
 1. Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high.
@@ -537,7 +540,7 @@ we see how inverter behaves when it is switching on and off that is
 2. how strong the signals are
 3. to catch issues like sudden changes and stuck states
 
-## Propagation delay = rise or fall delay
+## Propagation delay (rise or fall delay)
 
 DC transfer analysis is used for finding switching threshold. SPICE DC analysis below uses DC input of 2.5V. Simulation operation is DC sweep from 0V to 2.5V by 0.05V steps:
 ```
