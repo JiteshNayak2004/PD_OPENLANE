@@ -1,4 +1,4 @@
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/3d0fec5e-67ae-46f1-8d4c-234a5476c9f7)# PD_OPENLANE
+# PD_OPENLANE
 RTL to GDS flow using openlane
 <details>
 <summary>openlane and sky130 PDK</summary>
