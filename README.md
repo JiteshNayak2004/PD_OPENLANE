@@ -326,13 +326,12 @@ Core is where the logic blocks are placed and this seats at the center of the di
 </details>
 <details>
 <summary>day 2 lab </summary>
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/aa48c0dd-a53f-4e66-a415-2b53f9d4cab5)
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/e955aa41-ccdd-4950-9594-4861c00239be)
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/9adddbb9-8f80-458f-8309-1e23bfea47e6)
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/0933ea8f-60ea-4149-aaa6-cd2be4483dd9)
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/cb3d1110-2155-48ea-8c5a-cf8d083e35ef)
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/b940442e-edce-4169-bdb1-a8b961c49ef3)
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/58550eef-1857-428c-8d61-eea16795dd61)
+![Screenshot from 2023-09-16 10-27-33](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/64d32982-88d1-4f84-9dd8-4249c4500e40)
+![Screenshot from 2023-09-16 10-28-03](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/bcd0f167-d195-4daa-90df-54843e524c29)
+![Screenshot from 2023-09-16 10-29-26](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/6df57730-bc4b-4c62-bfa0-d40dfb40a637)
+![Screenshot from 2023-09-16 10-30-12](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/7a9c6f04-2aa6-48cc-a25b-60d28596dbca)
+![Screenshot from 2023-09-16 10-30-30](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/99c69ed3-f6ca-46e3-b14f-cf393226eca7)
+
 
  
 </details>
