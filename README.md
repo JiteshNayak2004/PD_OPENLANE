@@ -484,6 +484,8 @@ Low transition time = time(slew_high_fall_thr) - time (slew_low_fall_thr)
 <details>
  <summary>Design library cell using Magic Layout and ngspice </summary>
 
+
+
  Configurations on OpenLANE can be changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session. To echo current value of variable: `echo $::env(FP_IO_MODE)`
 
 
