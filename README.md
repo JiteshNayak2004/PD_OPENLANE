@@ -319,19 +319,98 @@ Core is where the logic blocks are placed and this seats at the center of the di
 3. We have to think about things like keeping the signals strong, spreading out power evenly, managing heat, and making sure it fits with standard connectors and packaging.
 4. When we do this pin placement right, it makes the electronic system more reliable, easier to build, and more user-friendly.
 
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/4ce61e33-1955-48e4-8a55-d834ab544a9a)
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/b8930ea2-483d-466a-be27-27abb4d2f767)
+### Logical Cell Placement Blockage
+This makes sure that the automated placement and routing tool does not place any cell on the pin locations of the die.
+
+Below are all 6  steps for floor planning:  
+
+![image](https://user-images.githubusercontent.com/87559347/183446309-a0714ec5-0619-4327-bdfe-890c19cc97e0.png)
+
+
+### Placement Stage:
+1. Bind the netlist to a physical cell with real dimensions. The physical cell will come from a library that can provide multiple options for shapes, dimensions, and delay for same cells. 
+2. Next is placement of those physical cells to the floorplan. The flip flops must be placed as near as possible to the input and output pins to reduce timing delay. 
+3. Optimize placement to maintain signal integrity. This is where we estimate wirelength and capacitance (C=EA/d) and based on that insert repeaters/buffers. The wirelength will form a resistanace which will cause unnecessary voltage drop and a capacitance which will cause a slew rate that might not be permissible for fast current switching of logic gates. The solution to reduce resistance and capacitance is to insert buffers for long routes that will act as intermediary and separate a single long wire to multilple ones. Sometime we also do abutment where logic cells are placed very close to each other (almost zero delay) if it has to run at high frequency (2GHz). Crisscrossing of routes is a normal condition for PnR since we can use separate metal layer (using vias) for crisscrossed path.
+4. After placement optimization, We will setup timing analysis using idle clock (zero delay for wires and has no clock buffer related delays) considering we have not yet done CTS.   
+
+The goal of placement is not yet on timing but on congestion. Also, standard cells are not placed on floorplan stage, it is done on Placement stage. Macros or preplaced cells are the ones placed on floorplan stage.Macros or preplaced cells are placed on floorplan stage.
+
+![image](https://user-images.githubusercontent.com/87559347/183224947-67a29c54-9a18-45a4-bbd1-9132bcebc304.png)  
+
+Placement is done on two stages:
+ - Global Placement = placement with no legalizations and goal is to reduce wirelength. It uses Half Perimeter Wirelength (HPWL) reduction model. 
+ - Detailed Placement = placement with legalization where the standard cells are placed on stadard rows, abutted, and must have no overlaps    
+ 
+
+
+### Lab [Day 2] - Determine Die Area: 
+
+**1. Set configuration variables.** Before running floorplan stage, the configuration variables or switches must be configured first. The configuration variables are on `openlane/configuration`:  
+
+```
+.
+├── README.md      
+├── checkers.tcl
+├── cts.tcl
+├── floorplan.tcl  
+├── general.tcl
+├── lvs.tcl
+├── placement.tcl
+├── routing.tcl
+└── synthesis.tcl 
+
+```  
+
+The  `README.md` describes all configuration variables for every stage and the tcl files contain the default OpenLANE settings. All configurations accepted by the current run is on `openlane/designs/picorv32a/runs/config.tcl`. This may come either from (with priority order):
+ - PDK specific configuration inside the design folder
+ - `config.tcl` inside the design folder
+ - System default settings inside `openlane/configurations`
+
+**2. Run floorplan on OpenLane:** `% run floor_plan`
+
+ 
+**3. Check the results.** The output of this stage is `runs/[date]/results/floorplan/picorv32a.floorplan.def` which is a [design exchange format](https://teamvlsi.com/2020/08/def-file-in-vlsi-design-exchange.html), containing the die area and positions. 
+```
+...........
+DESIGN picorv32a ;
+UNITS DISTANCE MICRONS 1000 ;
+DIEAREA ( 0 0 ) ( 660685 671405 ) ;
+............
+```
+The die area here is in database units and 1 micron is equivalent to 1000 database units. **Thus area of the die is (660685/1000)microns\*(671405/1000)microns = 443587 microns squared.** 
+
+**4. View the layout on magic**. Open def file using `magic`:  
+
+```
+magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.floorplan.def
+```  
+
+![image](https://user-images.githubusercontent.com/87559347/183226953-8bf8b067-5a70-43a3-9b92-f39caaf02a4a.png)
+
+
+To center the view, press "s" to select whole die then press "v" to center the view. Point the cursor to a cell then press "s" to select it, zoom into it by pressing 'z". Type "what" in `tkcon` to display information of selected object. These objects might be IO pin, decap cell, or well taps as shown below.  
+
+![image](https://user-images.githubusercontent.com/87559347/183100900-b3527702-5375-4a4e-ad87-194fce382128.png)
+ Useful Magic commands are listed on the [Magic Commands section](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#magic-commands).
+
+**5 Run placement:** `% run_placement`. This commmand is a wrapper which does global placement (performed by RePlace tool), Optimization (by Resier tool), and detailed placement (by OpenDP tool). It displays hundreds of iterations displaying HPWL and OVFL. The algorithm is said to be converging if the overflow is decreasing. It also checks the legality. 
+
+**6. View the output of this stage**. The output of this stage is `runs/[date]/results/placement/picorv32a.placement.def.` To see actual layout after placement, open def file using `magic`:  
+
+```
+magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def
+```  
+
+![image](https://user-images.githubusercontent.com/87559347/183227636-cc5b24b3-5b05-469f-9af1-de89b3c7ed1e.png)  
+
+
 
    
 </details>
+
+
 <details>
 <summary>day 2 lab </summary>
-![Screenshot from 2023-09-16 10-27-33](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/64d32982-88d1-4f84-9dd8-4249c4500e40)
-![Screenshot from 2023-09-16 10-28-03](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/bcd0f167-d195-4daa-90df-54843e524c29)
-![Screenshot from 2023-09-16 10-29-26](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/6df57730-bc4b-4c62-bfa0-d40dfb40a637)
-![Screenshot from 2023-09-16 10-30-12](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/7a9c6f04-2aa6-48cc-a25b-60d28596dbca)
-![Screenshot from 2023-09-16 10-30-30](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/99c69ed3-f6ca-46e3-b14f-cf393226eca7)
-
 
  
 </details>
