@@ -777,31 +777,23 @@ Read through [this site about tech file](http://opencircuitdesign.com/magic/tech
 Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root)
 
 1. Download the [lab contents from this site](opencircuitdesign.com/open_pdks/archive/drc_tests.tgz). Extract the tarball. Inside the `drc_tests/` are the `.mag` layout files and the `sky130A.tech`.
-2. 
-Commands to open magic 
+2. Commands to open magic 
 ```
 magic -d XR
 ```
-
 Then we open the met3.mag file
-
-
 ![image](https://github.com/Anirudh-Ravi123/pes_pd/assets/142154804/e746a4b8-cd4b-442e-8916-2bc8fdce4c9e)
-
-
 
 To check which DRC rule is being violated select area and type drc why in tkcon 
 
-
 ![image](https://github.com/Anirudh-Ravi123/pes_pd/assets/142154804/be24dcd6-9893-4c5a-b2d1-5b2061b9370c)
-
-
 
 to add contact cuts 
 add met3 contact by selecting area and clicking on m3contact using middle mouse button.
 then type ``` cif see VIA2``` in tkcon prompt
 
-![image](https://github.com/Anirudh-Ravi123/pes_pd/assets/142154804/075377c5-4aa4-4583-9656-d0e87d5ab95a)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/a27f74cd-0cbe-4b9c-8651-ecbd7941fb6a)
+
 
 ## fixing drc errors
 
