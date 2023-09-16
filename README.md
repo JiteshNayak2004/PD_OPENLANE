@@ -479,6 +479,288 @@ Rise transition time = time(slew_high_rise_thr) - time (slew_low_rise_thr)
 Low transition time = time(slew_high_fall_thr) - time (slew_low_fall_thr)
 ```
 
+</details>
+
+<details>
+ <summary>Design library cell using Magic Layout and ngspice </summary>
+
+ Configurations on OpenLANE can be changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session. To echo current value of variable: `echo $::env(FP_IO_MODE)`
+
+
+### Designing a Library Cell:
+1. SPICE deck = component connectivity (basically a netlist) of the CMOS inverter.
+2. SPICE deck values = value for W/L (0.375u/0.25u means width is 375nm and lengthis 250nm). PMOS should be wider in width(2x or 3x) than NMOS. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
+3. Add nodes to surround each component and name it. This will be used in SPICE to identify a component.    
+
+**Notes:**
+ - Width is the length of source and drain. Length is the distance between source and drain
+ - PMOS' hole carrier is slower than NMOS' electron carrier mobility, so to match the rise and fall time PMOS must be thicker (less resistance thus higher mobility) than NMOS  
+ - A good refresher on MOSFETS and CMOS [is this video](https://www.youtube.com/watch?v=oSrUsM0hoPs) and [this site.](http://courseware.ee.calpoly.edu/~dbraun/courses/ee307/F02/02_Shelley/Section2_BasilShelley.htm)
+
+### SPICE Deck Netlist Description:  
+
+![image](https://user-images.githubusercontent.com/87559347/183240195-608727e5-2d04-4e44-ab4a-2df545cd13ea.png)
+
+**Notes:**
+ - Syntax for the PMOS and NMOS descriptiom:
+     - `[component name] [drain] [gate] [source] [substrate] [transistor type] W=[width] L=[length]`
+ - All components are described based on nodes and its values
+ - `.op` is the start of SPICE simulation operation where Vin will be sweep from 0 to 2.5 with 0.5 steps
+ - `tsmc_025um_model.mod` is the model file containing the technological parameters for the 0.25um NMOS and PMOS
+The steps to simulate in SPICE:
+```
+source [filename].cir
+run
+setplot 
+dc1 
+plot out vs in 
+```  
+
+## SPICE Analysis for Switching Threshold and Propagation Delay:
+CMOS robustness depends on:  
+
+## Switching threshold
+1. Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high.
+2. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V) while threshold will be lower when NMOS becomes thicker.
+3. It's the point at which this inverter switches between sending out a "0" or a "1" in a computer chip
+4. there are two types of tests to analyse cmos inverter behaviour
+##### static test
+we see how the inverter behaves in a stable state that is
+1. how much power it uses
+2. how fast it can send a signal
+3. how safe it is against errors
+#### dynamic test
+we see how inverter behaves when it is switching on and off that is
+1. how fast can it switch
+2. how strong the signals are
+3. to catch issues like sudden changes and stuck states
+
+## Propagation delay = rise or fall delay
+
+DC transfer analysis is used for finding switching threshold. SPICE DC analysis below uses DC input of 2.5V. Simulation operation is DC sweep from 0V to 2.5V by 0.05V steps:
+```
+Vin in 0 2.5
+*** Simulation Command ***
+.op
+.dc Vin 0 2.5 0.05
+```  
+Below is the result of SPICE simulation for DC analysis, the line intersection is the switching threshold:  
+
+![image](https://user-images.githubusercontent.com/87559347/187056328-d6f6d5f5-4ce1-4454-9a5a-26be83a84734.png)
+
+
+
+
+Meanwhile, transient analysis is used for finding propagation delay. SPICE transient analysis uses pulse input: 
+1. starts at 0V
+2. ends at 2.5V
+3. starts at time 0
+4. rise time of 10ps
+5. fall time of 10ps
+6. pulse-width of 1ns
+7. period of 2ns  
+
+![image](https://user-images.githubusercontent.com/87559347/187055752-dd66feae-f1e7-4b5b-a037-d1a148b01833.png)  
+
+The simulation operation has 10ps step and ends at 4ns:  
+
+```
+Vin in 0 0 pulse 0 2.5 0 10p 10p 1n 2n 
+*** Simulation Command ***
+.op
+.tran 10p 4n
+```  
+Below is the result of SPICE simulation for transient analysis:
+
+![image](https://user-images.githubusercontent.com/87559347/187056370-18949899-a158-4307-96d9-d5c06bbeed66.png)
+ 
+ ### CMOS Fabrication Process (16-Mask CMOS Process):  
+ **1. Selecting a substrate** = Layer where the IC is fabricated. Most commonly used is P-type substrate  
+ **2. Creating active region for transistor** = Separate the transistor regions using SiO2 as isolation
+  - Mask 1 = Covers the photoresist layer that must not be etched away (protects the two transistor active regions)
+  - Photoresist layer = Can be etched away via UV light  
+  - Si3N4 layer = Protection layer to prevent SiO2 layer to grow during oxidation (oxidation furnace)  
+  - SiO2 layer = Grows during oxidation (LOCOS = Local Oxidation of Silicon) and will act as isolation regions between transistors or active regions  
+  
+![image](https://user-images.githubusercontent.com/87559347/187062659-9e18e9a5-eff4-4d01-804d-cc1e10597486.png)  
+
+ **3. N-Well and P-Well Fabrication** = Fabricate the substrate needed by PMOS (N-Well) and NMOS (P-Well)  
+  - Phosporus (5 valence electron) is used to form N-well  
+  - Boron (3 valence electron) is used to form P-Well.  
+  - Mask 2 protects the N-Well (PMOS side) while P-Well (NMOS side) is being fabricated then Mask 3 while N-Well (PMOS side) is being fabricated
+   
+![image](https://user-images.githubusercontent.com/87559347/187099587-4a837f08-b6d3-4cb9-afe6-75ee8d88cfff.png) 
+
+ **4. Formation of Gate** = Gate fabrication affects threshold voltage. Factors affecting threshold voltage includes:    
+ 
+![image](https://user-images.githubusercontent.com/87559347/187111068-874f408a-d41b-4b16-a5f0-49edfced8926.png)
+
+Main parameters are:
+  - Doping Concentration = Controlled by ion implantation (Mask 4 for Boron implantation in NMOS P-Well and Mask 5 for Arsenic implantation in PMOS N-Well)
+  - Oxide capacitance = Controlled by oxide thickness  (SiO2 layer is removed then rebuilt to the desire thickness)  
+  
+ Mask 6 is for gate formation using polysilicon layer.
+ 
+![image](https://user-images.githubusercontent.com/87559347/187116601-0ac34212-3622-4719-9309-fca887ad995a.png)
+**5. Lightly Doped Drain formation** = Before forming the source and drain layer, lightly doped impurity is added: 
+ - Mask 7 for N- implantation (lightly doped N-type) for NMOS 
+ - Mask 8 for P- implantation (lightly doped P-type) for PMOS.  
+Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source and drain but the lightly doped impurity will help maintain spacing between the source and drain and prevent hot electron effect and short channel effect. 
+
+![image](https://user-images.githubusercontent.com/87559347/187121868-94dfade0-2c63-4c9c-afef-942ef9662d5a.png)
+**6. Source and Drain Formation** = Mask 9 is for N+ implantation and Mask 10 for P+ implantation  
+ - Channeling is when implantations dig too deep into substrate so add screen oxide before implantation
+ - The side-wall spacers maintains the N-/P- while implanting the N+/P+    
+ 
+![image](https://user-images.githubusercontent.com/87559347/187128442-76d48790-53a0-4ad2-9856-924f3efd33eb.png)
+
+**7. Form Contacts and Interconnects** =  TiN is for local interconnections and also for bringing contacts to the top. TiS2 is for the contact to the actual Drain-Gate-Source. Mask 11 is for etching off the TiN interconnect for the first layer contact. 
+
+![image](https://user-images.githubusercontent.com/87559347/187141267-b043152d-0a76-4101-90ec-82c9adcc64e2.png)
+
+**8. Higher Level Metal Formation** = We need to planarize first the layer via CMP before adding a metal interconnect. Aluminum contact is used to connect the lower contact to higher metal layer. Process is repeated until the contact reached the outermost layer.
+ - Mask 12 is for first contact hole
+ - Mask 13 is for first Aluminum contact layer
+ - Mask 14 is for second contact hole
+ - Mask 15 is for second Aluminum contact layer. Mask 16 is for making contact to topmost layer. 
+ 
+![image](https://user-images.githubusercontent.com/87559347/187158161-4d230654-5102-4225-8e58-d6d8ed950990.png)
+
+### Layout and Metal Layers:
+
+When polysilicon crosses N-diffusion/P-diffusion (diffusion is also called implantation), then an NMOS/PMOS is created. [Explained here](https://electronics.stackexchange.com/questions/223973/why-diffusions-in-cmos-cad-tool-magic-is-continuous) is the reason why the diffusion layer of source and drain "seems" to be connected under the polysilicon (diffusion layer for source and drain supposedly be separated).
+
+
+The first layer is local-interconnect layer or local-i then metal 1 to 5. [Here is the process stack diagram](https://skywater-pdk.readthedocs.io/en/main/rules/assumptions.html) of sky130nm PDK. Metal 1 is for Power and Ground lines. `Nsubstratecontact` connects the N-well to locali. `licon` connects the locali to metal1.Locali is for local connections of cells. 
+
+The layer hierarchy for NMOS is: Psubstrate -> Psubstrate Diffusion (psd) -> Psubstrate Contact (psc) -> Local-interconnect (li) -> Mcon -> Metal1. For poly: Poly -> Polycontact -> Locali. P-substrate diffusion an N-substrate diffusion is also referred to as P-tap and N-tap. 
+
+The output of the layout is the LEF file. [LEF (Library Exchange Format)](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) is used by the router tool in PnR design to get the location of standard cells pins to route them properly. So it is basically the abstract form of layout of a standard cell. `picorv32a/runs/[DATE]/tmp` contains the merged lef files (cell LEF and tech LEF). Notice how metal layer directon (horizontal or vertical) is alternating. Also, metal layer width and thickness is increasing. 
+
+### Magic Commands:  
+[Here is a great video guide](https://www.youtube.com/watch?v=RPppaGdjbj0) on layout using Magic. And [here is the Magic website](http://opencircuitdesign.com/magic/) with tutorials.
+- Left click = lower-left corner of box  
+- Right click = upper-right corner of box  
+- "z" = zoom in, "Z" = zoom out, "ctrl + z" = zoom into the box 
+- Middle click on empty area will turn the box into empty (similar to erasing it)
+- "s" three times will select all geometries electrically connected to each other  
+- `:box` = display parameters of selected box  
+- `:grid` 0.5um 0.5um = turn on/off and set grid   
+- `:snap user` = snap based on current grid  
+- `:help snap` = display help for command  
+- `:drc style drc(full)` = use all DRC when doing DRC checking
+- `:paint poly` = paint "poly" to current box
+- `:drc why` = show drc violation inside selected area (white dots are DRC violations )
+- `:erase poly` = delete poly inside the box
+- `:select area` = select all geometries inside the box
+- `:copy n 30` = copy selected geometries to North by 30 grid steps
+- `:move n 1` = move selected geometries to North by 1 step ("." to move more, "u" to undo)  
+- `: select cell _08555_` = select a particular cell instance (e.g. cell \_08555_ which can be searched in the DEF file)
+- `:cellname allcells` = list all cells in the layout
+- `:cellname exists sky130_fd_sc_hd__xor3_4` = check if a cell exists 
+- `:drc why` = show DRC violation and also the DRC name which can be referenced from [Sky130 PDK Periphery Rules](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root).
+
+![image](https://user-images.githubusercontent.com/87559347/187588800-f083e5a5-2f22-4670-8a69-93d222794d27.png)
+
+
+### Lab Part 1 [Day 3] - Slew Rate and Propagation Delay Characterization:
+
+The task is to characterize a sample inverter cell by its slew rate and propagation delay.  
+
+1. Clone [vsdstdcelldesign](https://github.com/nickson-jose/vsdstdcelldesign). Copy the techfile `sky130A.tech` from `pdks/sky130A/libs.tech/magic/` to directory of the cloned repo. Below are the contents of `vsdstdcelldesign/libs/`:
+![image](https://user-images.githubusercontent.com/87559347/187333491-7fd10850-9f8a-486d-9d4c-a93f4002fdea.png)
+
+
+2. View the mag file using magic `magic -T sky130A.tech sky130_inv.mag &`:  
+
+![image](https://user-images.githubusercontent.com/87559347/183270193-c3e58fcd-951a-4d29-8856-921de11e7903.png)
+
+3. Make an extract file `.ext` by typing `extract all` in the tkon terminal. 
+4. Extract the `.spice` file from this ext file by typing `ext2spice cthresh 0 rthresh 0` then `ext2spice` in the tcon terminal.  
+
+![image](https://user-images.githubusercontent.com/87559347/188252410-0f71a30b-b05e-4ddb-9d95-2fd40712825d.png)
+
+We then modify the spice file to be able to plot a transient response:
+
+```
+* SPICE3 file created from sky130_inv.ext - technology: sky130A
+
+.option scale=0.01u
+.include ./libs/pshort.lib
+.include ./libs/nshort.lib
+
+* .subckt sky130_inv A Y VPWR VGND
+M0 Y A VGND VGND nshort_model.0 ad=1435 pd=152 as=1365 ps=148 w=35 l=23
+M1 Y A VPWR VPWR pshort_model.0 ad=1443 pd=152 as=1517 ps=156 w=37 l=23
+C0 A VPWR 0.08fF
+C1 Y VPWR 0.08fF
+C2 A Y 0.02fF
+C3 Y VGND 0.18fF
+C4 VPWR VGND 0.74fF
+* .ends
+
+* Power supply 
+VDD VPWR 0 3.3V 
+VSS VGND 0 0V 
+
+* Input Signal
+Va A VGND PULSE(0V 3.3V 0 0.1ns 0.1ns 2ns 4ns)
+
+* Simulation Control
+.tran 1n 20n
+.control
+run
+.endc
+.end
+```  
+
+Open the spice file by typing `ngspice sky130A_inv.spice`. Generate a graph using `plot y vs time a` :  
+
+![image](https://user-images.githubusercontent.com/87559347/183271057-ef99f8f2-5c76-49ac-a4a4-d425a41f6cf5.png)
+
+Using this transient response, we will now characterize the cell's slew rate and propagation delay:  
+- Rise Transition [output transition time from 20%(0.66V) to 80%(2.64V)]:
+    - **Tr_r = 2.19981ns - 2.15739ns = 0.04242 ns**  
+![image](https://user-images.githubusercontent.com/87559347/188260029-84633ed7-446e-4d1b-b723-12397dcfc71a.png)  
+
+
+- Fall Transition [output transition time from 80%(2.64V) to 20%(0.66V)]:
+   - **Tr_f = 4.0672ns - 4.04007ns = 0.02713ns**   
+![image](https://user-images.githubusercontent.com/87559347/188260236-4cc5d4c7-654a-4600-a277-9f6c1df63b11.png)
+
+
+- Rise Delay [delay between 50%(1.65V) of input to 50%(1.65V) of output]:
+   - **D_r = 2.18197ns - 2.15003ns = 0.03194ns**   
+![image](https://user-images.githubusercontent.com/87559347/188261194-395c7cfd-caea-4efa-a670-310cb30ff6a2.png)
+
+
+- Fall Delay [delay between 50%(1.65V) of input to 50%(1.65V) of output]:
+   - **D_f = 4.05364ns - 4.05001ns =0.00363ns**  
+![image](https://user-images.githubusercontent.com/87559347/188261518-792d3e99-6a5a-423d-9309-62287c608ec0.png)
+
+
+### Lab Part 2 [Day 3] - Fix Tech File DRC via Magic:
+ 
+Read through [this site about tech file](http://opencircuitdesign.com/magic/techref/maint2.html). All technology-specific information comes from a technology file. This file includes such information as layer types used, electrical connectivity between types, design rules, rules for mask generation, and rules for extracting netlists for circuit simulation. 
+Read through also [this site on the DRC rules for SKY130nm PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#rules-periphery--page-root)
+
+1. Download the [lab contents from this site](opencircuitdesign.com/open_pdks/archive/drc_tests.tgz). Extract the tarball. Inside the `drc_tests/` are the `.mag` layout files and the `sky130A.tech`.  
+
+2. Open magic with `poly.mag` as input: `magic poly.mag`. Focus on `Incorrect poly.9` layout. As described on the poly.9 [design rule of SKY130 PDK](https://skywater-pdk.readthedocs.io/en/main/rules/periphery.html#poly), the spacing between polyresistor with poly or diff/tap must at least be 0.480um. Using `:box`, we can see that the distance is 0.250um YET there is no DRC violations shown. Our goal is to fix the tech file to include that DRC.  
+![image](https://user-images.githubusercontent.com/87559347/188370620-7e802ce0-cd15-4385-9b73-d8f5ee5fe8ae.png)
+
+3. Open `sky130A.tech`. The included rules for poly.9 are only for the spacing between the n-poly resistor with n-diffusion and the spacing between the p-poly resistor with diffusion. We will now add new rules for the spacing between the **poly resistor with poly non-resistor**, highlighted green below are the two added rules. On the left is the rule for spacing between n-poly resistor with poly non-resistor and on the right is the rule for the spacing between the p-poly resistor with poly non-resistor. The `allpolynonres` is a macro under `alias` section of techfile. 
+![image](https://user-images.githubusercontent.com/87559347/188374444-4999b439-40ab-42ae-91cd-91017c217f3e.png)
+
+4. Run `tech load sky130A.tech` then `drc check` in tkcon to reload the tech file. The new DRC rules will now take effect.Notice the white dots on the poly indicating the design rule violations. Command `drc find` to iterate in each violations.  
+![image](https://user-images.githubusercontent.com/87559347/188373919-e9d1bd08-7c50-400a-9a17-65fa4296c82e.png)
+
+5. Next, notice below that there are violations between N-substrate diffusion with the polyresistors (from left: npolyres, ppolyres, xpolyres) which is good. But between npolyres with P-substrate diffusion, there is no violation shown. 
+![image](https://user-images.githubusercontent.com/87559347/188421029-0f94f6c8-8fc7-4aab-b895-05de5de40f7c.png)
+
+6. To fix that, just modify the tech file to include not only the spacing between npolyres with N-substrate diffusion in poly.9 but between **npolyres and all types of diffusion**. `alldif` is also a macro under `alias` section. Load the tech file again, the new DRC will now take effect.  
+![image](https://user-images.githubusercontent.com/87559347/188384339-225f2a84-8aca-44c6-b742-272448051fc9.png)  
+![image](https://user-images.githubusercontent.com/87559347/188421488-3d84c048-06b3-46ac-9816-513dd7c721f2.png)
 
 </details>
 
