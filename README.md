@@ -146,12 +146,7 @@ Inside a specific design folder contains a `config.tcl` which overrides the defa
 2. config.tcl in `OpenLane/designs/[design]/`
 3. Default values in `OpenLane/configuration/`
  
-
-</details>
-
-
-<details>
-<summary>lab for day 1</summary>
+## labwork 
 
 tool files
 
@@ -276,6 +271,11 @@ Flop ratio = Number of D Flip flops = 1596  = 0.1579
 
 After running synthesis, inside the `runs/[date]/results/synthesis` is `picorv32a_synthesis.v` which is the mapping of the netlist to standard cell library using ABC. The `runs/[date]/reports/synthesis` will contain synthesis statistic reports and static timing analysis reports. The `runs/[date]/synthesis/logs` contains log files for the terminal output dumps for running yosys and OpenSTA.
 </details>
+
+
+
+
+
 
 <details>
  <summary>Good Floorplan vs Bad Floorplan and intro to library cells </summary>
