@@ -683,27 +683,34 @@ The task is to characterize a sample inverter cell by its slew rate and propagat
 1. Clone [vsdstdcelldesign](https://github.com/nickson-jose/vsdstdcelldesign). Copy the techfile `sky130A.tech` from `pdks/sky130A/libs.tech/magic/` to directory of the cloned repo. Below are the contents of `vsdstdcelldesign/libs/`:
 
 
-2. View the mag file using magic `magic -T sky130A.tech sky130_inv.mag &`:  
+2. View the mag file using magic `magic -T sky130A.tech sky130_inv.mag &`:  the below image is the layout of the inverter
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/f10fb291-02eb-4896-814e-9638d512d26e)
 
-4. We can get to know the details of the inverter by hovering the mouse cursor over it and pressing 's' on the keyboard. Then we can type
-**what** in the tkcon
+4. tWe can get to know the details of the inverter by hovering the mouse cursor over it and pressing 's' on the keyboard.
+Then we can type **what** in the tkcon terminal
  ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/ca9955a6-5aae-48a2-8e60-03cf13517b2a)
 
-5. Pressing 's' three times will show what parts are connected to the selected part
-6. We shall look at the difference between LEF and Layout. The above image is a Layout
+6. Pressing 's' three times will show what parts are connected to the selected part
 7. LEF represents abstract component data in a machine-readable format for IC libraries, while layout is the physical geometric arrangement of these components on a semiconductor chip.
 8. DRC errors in magic will be highlighted with white dotted lines:
    ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/ddf4ee1c-9a2f-43f9-b750-887eb6fedfe0)
 
-   
-9. Make an extract file `.ext` by typing `extract all` in the tkon terminal. 
-10. Extract the `.spice` file from this ext file by typing `ext2spice cthresh 0 rthresh 0` then `ext2spice` in the tcon terminal.
-11. ext2spice cthresh 0 rthresh 0 -> this is done to copy the parasitic capacitances
+ ### extracting spice netlist
+ 
+1. Make an extract file `.ext` by typing `extract all` in the tkon terminal. 
+2. Extract the `.spice` file from this ext file by typing `ext2spice cthresh 0 rthresh 0` 
+3. cthresh 0 rthresh 0 -> this is done to copy the parasitic capacitances
+4. then `ext2spice` in the tkcon terminal.
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/c893924b-7085-4d70-adce-4079b0f5a4fa)
 
+5. we can now see that sky130_inv.spice file has been created
 
-We then modify the spice file to be able to plot a transient response:
+## sky130 tech file labs
+
+1. let us first find the dimensions of a box in the layout window
+2. We can use 'g' on the keyboard to activate the grid and after selecting a grid by right clicking on the mouse, we type box in tkcon window to check the minimum value of the layout window.
+   
+3. We then modify the spice file to be able to plot a transient response:
 
 ```
 * SPICE3 file created from sky130_inv.ext - technology: sky130A
@@ -737,9 +744,11 @@ run
 .end
 ```  
 
-Open the spice file by typing `ngspice sky130A_inv.spice`. Generate a graph using `plot y vs time a` :  
+4. Open the spice file by typing `ngspice sky130A_inv.spice`.
+5. Generate a graph using `plot y vs time a` :  
 
-![image](https://user-images.githubusercontent.com/87559347/183271057-ef99f8f2-5c76-49ac-a4a4-d425a41f6cf5.png)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/502051a8-3f59-4d7d-bc12-6decc8dde6fe)
+
 
 Using this transient response, we will now characterize the cell's slew rate and propagation delay:  
 - Rise Transition [output transition time from 20%(0.66V) to 80%(2.64V)]:
