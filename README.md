@@ -1,4 +1,4 @@
-# PD_OPENLANE
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/3d0fec5e-67ae-46f1-8d4c-234a5476c9f7)# PD_OPENLANE
 RTL to GDS flow using openlane
 <details>
 <summary>openlane and sky130 PDK</summary>
@@ -406,15 +406,29 @@ magic -T /home/kunalg123/Desktop/work/tools/openlane_working_dir/pdks/sky130A/li
 ![5](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/e91690d9-ab46-40d7-bb90-919513648956)
 
 
+## Libraary Binding and Placement
+
+1. Netlist binding is the process of mapping the logical representation of a digital design (typically described in a HDL onto a library of standard cells.
+2. Every component is mapped to a given shape and the working of these are defined in the library.
+3. Then all these shapes from each stage of the netlist are placed onto the floorplan in a efficient way so that delay is minimal and the blocks are closer to their  i/p or o/p pins.
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/ec7863b1-e009-4bb4-8434-52ea8bd4d2f2)
+
+4. from din2 to ff1 we use buffers because in longer distances the resistance and capacitance of the interconnect causes distortion in signal aka signal integrity is lost thus buffers are used that take the signal and replicate it enhanching signal integrity
+5. 
+
+
 ### CELL DESIGN AND CHARACETRIZATION FLOWS
 
 Library is a place where we get information about every cell. It has differents cells with different size, functionality,threshold voltages. There is a typical cell design flow steps.
+
 1. Inputs : PDKS(process design kit) : DRC & LVS, SPICE Models, library & user-defined specs.
 2. Design Steps :Circuit design, Layout design (Art of layout Euler's path and stick diagram), Extraction of parasitics, Characterization (timing, noise, power).
 3. Outputs: CDL (circuit description language), LEF, GDSII, extracted SPICE netlist (.cir), timing, noise and power .lib files
 
 ### Standard Cell Characterization Flow
-
+1. characterization provides the essential data needed to accurately model and simulate the behavior of these components
+   
 A typical standard cell characterization flow that is followed in the industry includes the following steps:
 
 1. Read in the models and tech files
