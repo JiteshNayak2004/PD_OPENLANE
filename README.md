@@ -324,4 +324,16 @@ Core is where the logic blocks are placed and this seats at the center of the di
 
    
 </details>
+<details>
+<summary>day 2 lab </summary>
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/aa48c0dd-a53f-4e66-a415-2b53f9d4cab5)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/e955aa41-ccdd-4950-9594-4861c00239be)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/9adddbb9-8f80-458f-8309-1e23bfea47e6)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/0933ea8f-60ea-4149-aaa6-cd2be4483dd9)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/cb3d1110-2155-48ea-8c5a-cf8d083e35ef)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/b940442e-edce-4169-bdb1-a8b961c49ef3)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/58550eef-1857-428c-8d61-eea16795dd61)
+
+ 
+</details>
 
