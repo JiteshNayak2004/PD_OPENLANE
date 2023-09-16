@@ -686,8 +686,9 @@ The task is to characterize a sample inverter cell by its slew rate and propagat
 2. View the mag file using magic `magic -T sky130A.tech sky130_inv.mag &`:  the below image is the layout of the inverter
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/f10fb291-02eb-4896-814e-9638d512d26e)
 
-4. tWe can get to know the details of the inverter by hovering the mouse cursor over it and pressing 's' on the keyboard.
+4. We can get to know the details of the inverter by hovering the mouse cursor over it and pressing 's' on the keyboard.
 Then we can type **what** in the tkcon terminal
+
  ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/ca9955a6-5aae-48a2-8e60-03cf13517b2a)
 
 6. Pressing 's' three times will show what parts are connected to the selected part
