@@ -486,7 +486,15 @@ Low transition time = time(slew_high_fall_thr) - time (slew_low_fall_thr)
 
 
 
- Configurations on OpenLANE can be changed on the flight. For example, to change IO_mode to be not equidistant, use `% set ::env(FP_IO_MODE) 2;` on OpenLANE. The IO pins will not be equidistant on mode 2 (default of 1). Run floorplan again via `% run_floorplan` and view the def layout on magic. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session. To echo current value of variable: `echo $::env(FP_IO_MODE)`
+1. Configurations on OpenLANE can be changed on the flight.
+2. openlane/config has a readme witch description on all switches go to the floorplan section
+3. FP_IO_MODE is the mode to set i/p o/p pin placement strategy
+4. For example, to change IO_mode to be not equidistant use `% set ::env(FP_IO_MODE) 2;` on OpenLANE.
+5. The IO pins will not be equidistant on mode 2 (default of 1).
+6. Run floorplan again via `% run_floorplan` and view the def layout on magic.
+7. go to `designs/picorv32a/runs/date/result/floorplan` and use the following command
+  `magic -T tech file info lef read picorv32a.floorplan.def & `
+9. However, changing the configuration on the fly will not change the `runs/config.tcl`, the configuration will only be available on the current session. To echo current value of variable: `echo $::env(FP_IO_MODE)`
 
 
 ### Designing a Library Cell:
