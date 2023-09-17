@@ -283,7 +283,58 @@ After running synthesis, inside the `runs/[date]/results/synthesis` is `picorv32
 ## floor plan stage
 
 ### Find height and width of core and die.
-Core is where the logic blocks are placed and this seats at the center of the die. The width and height depends on dimensions of each standard cells on the netlist. Utilization factor is (area occupied by netlist)/(total area of the core). In practical scenario, utilization factor is 0.5 to 0.6. This is space occupied by netlist only, the remaining space is for routing and more additional cells. Aspect ratio is (height)/(width) of core, so only aspect ratio of 1 will produce a square core shape.
+
+
+
+1. Core is where the logic blocks are placed and this seats at the center of the die.
+2. The width and height depends on dimensions of each standard cells on the netlist.
+3. Utilization factor is (area occupied by netlist)/(total area of the core).
+4. In practical scenario, utilization factor is 0.5 to 0.6. This is space occupied by netlist only,the remaining space is for routing and more additional cells.
+5. Aspect ratio is (height)/(width) of core, so only aspect ratio of 1 will produce a square core shape.
+   
+### visual understanding 
+1. What is the core and die of the chip?
+A die which consists of core, is smallsemiconductor material specimen on which the fundamental circuit is fabricted.
+We imprint the die multiple times in the chip.
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/19971c29-85d5-4645-baa0-672a105c3284)
+
+
+2. die and core
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/cdeac4a7-b399-41aa-8739-fa2fe9cf7382)
+4. let us start with basic netlsit 
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/af137b6b-2087-4886-9602-538cd771ad21)
+we are mostly intreseted in the dimensions of the standard cells.
+
+5. Lets start with rough dimensions of Standard cells and Flip flops as 1unit x 1unit, area = 1sq. unit
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/08dd2fa7-4afb-4c8b-819e-7ce8fea2de30)
+
+6. lets calculate the area occupied by the netlist on a silicon wafer.
+arranging the cells and flip flops
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/db826254-a47e-49a2-b827-239ead80f07c)
+
+
+The netlist occuping 4sq. units in placed inside the core.
+In this case we are at 100% utilization of the core area, because the logial cells occupies the complete are of the core.
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/3a3e6708-ff78-42fe-9cc2-4274017e539e)
+Utilization Factor = (Area Occupied by netlist)/(Total Area of the Core)
+Utilization factor = 1
+
+Usually we design with utilization factor of 0.5, 0.6
+
+Aspect Ratio = Height/Width
+Aspect Ratio = 1(square chip)
+
+If the aspect ratio is other than 1, it means that the chip is in rectangular shape.
+
+lets take another example,
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/ab897fad-fd92-41cd-a5b9-bfc3d3d4540c)
+utilization factor = 0.5 (only 50% is being used, 50% is free)
+aspect ratio = 0.5 (rectangle chip)
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/cd2ab491-a02b-45f2-b13c-df330070c693)
+
+
 
 ### Define location of Preplaced Cell.
 
