@@ -825,17 +825,27 @@ then type ``` cif see VIA2``` in tkcon prompt
 **DRC Error as Geometrical Construct**
 - We open the nwell.mag file.
 
-![image](https://github.com/AniruddhaN2203/pes_pd/assets/142299140/4c49e5c5-4738-449c-9df0-048d2034825d)
-- We type the above commands
 
-![image](https://github.com/AniruddhaN2203/pes_pd/assets/142299140/40097614-0dfe-4479-b85c-4418e7b43787)
+- We type the below commands in the tkcon terminal
+~~~
+cif ostyle drc # op of this is " CIF output style is now "drc ""
+cif see dnwell_shrink
+cif see nwell_missing
+~~~
+
 - The following is displayed
 
-**Find Missing or Incorrect Rules and Fix Them**
+![image](https://github.com/AniruddhaN2203/pes_pd/assets/142299140/40097614-0dfe-4479-b85c-4418e7b43787)
 
+**Find Missing or Incorrect Rules and Fix Them**
+1.the below layout violates the rule
+~~~
+all n-wells will contain metal-contacted tap
+(rule checks only for licon on tap) . Rule exempted
+from high voltage cells inside UHV1
+~~~
 ![image](https://github.com/AniruddhaN2203/pes_pd/assets/142299140/338b998a-9a6b-4485-8d2b-095fbbcf3d83)
 
-![image](https://github.com/AniruddhaN2203/pes_pd/assets/142299140/cc00bc2f-31ed-45b3-96d8-a12b28697bd4)
 - As we can see this is an incorrect implementation and the above rule is violated.
 
 ![image](https://github.com/AniruddhaN2203/pes_pd/assets/142299140/d689590d-b9a7-43b2-b1da-72e95a9f4dcb)
