@@ -349,7 +349,7 @@ aspect ratio = 0.5 (rectangle chip)
 1. These are reusable complex logicblocks or modules or IPs or macros that is already implemented (memory, clock-gating cell, mux, comparator...) . The placement on the core is user-defined and must be done before placement and routing (thus preplaced cells). The automated place and route tools will not be able to touch and move these preplaced cells so this must be very well defined
 
 2. Surround preplaced cells with decoupling capacitors.The complex preplaced logicblock requires a high amount of current from the powersource for current switching. But since there is a distance between the main powersource and the logicblock, there will be voltage drop due to the resistance and inductance of the wire. This might cause the voltage at the logicblock to be not within the noise margin range anymore (logic is unstable). The solution is to use decoupling capacitors near the logic block, this capacitor will send enough current needed by the logicblock to switch within the noise margin range.
-3. 
+
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/8c69d4f8-855d-4515-8821-3065816d0d81)
 
 #### decoupling capacitors
