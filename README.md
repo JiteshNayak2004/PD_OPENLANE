@@ -350,7 +350,7 @@ aspect ratio = 0.5 (rectangle chip)
 
 2. Surround preplaced cells with decoupling capacitors.The complex preplaced logicblock requires a high amount of current from the powersource for current switching. But since there is a distance between the main powersource and the logicblock, there will be voltage drop due to the resistance and inductance of the wire. This might cause the voltage at the logicblock to be not within the noise margin range anymore (logic is unstable). The solution is to use decoupling capacitors near the logic block, this capacitor will send enough current needed by the logicblock to switch within the noise margin range.
 
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/8c69d4f8-855d-4515-8821-3065816d0d81)
+   ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/8c69d4f8-855d-4515-8821-3065816d0d81)
 
 #### decoupling capacitors
 1. The purpose of the decoupling capacitor is to charge the circuit. When a switching activity occurs, the decoupling capacitor transfers some of its charge to the circuit.
@@ -998,7 +998,6 @@ Provided inside the cloned `vsdstdcelldesign` are the liberty files containing t
 
 1. Copy the extracted lef file `sky130_myinverter.lef` and the liberty files `sky130*.lib` from `/openlane/vsdstdcelldesign/libs` to the src directory of picorv32a. Open each liberty files then change the cell name `sky130_vsdinv` to `sky130_myinverter` to match the new LEF file cell name.
 
-![image](https://user-images.githubusercontent.com/87559347/188646711-c1715a14-7b55-40d5-90d0-cc1344577d3f.png)
 
 2. Add the folowing to `config.tcl` inside the picorv32a:    
 ```  
