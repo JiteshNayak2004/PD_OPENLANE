@@ -5,6 +5,7 @@ RTL to GDS flow using openlane
 
 ### fundametals of chip structure
 
+
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/8ba7b58c-0580-43ec-aaed-bc877bb9ff21)
 
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/c2274d58-299e-413e-afb6-d7325d4fc7a7)
@@ -981,8 +982,8 @@ The grids show where the routing for the local-interconnet layer can only happen
 2. Next, we will extract the LEF file. The LEF file contains the cell size, port definitions, and properties which aid the placer and router tool. With that, the ports definition, port class, and port use must be set first. The instructions to set these definitions via Magic are on the [vsdstdcelldesign repo](https://github.com/nickson-jose/vsdstdcelldesign#create-port-definition). 
 
 3. Next, save the mag file with a new filename `save sky130_myinverter.mag`. Then type `lef write` on the tcon terminal. It will generate a LEF file with same name as the magfile `sky130_myinverter.lef`. Inside that LEF file is:  
+![lef file](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/b2c2f90a-c86e-4b16-86b5-960bd8f2dc84)
 
-![image](https://user-images.githubusercontent.com/87559347/188555080-03e4d472-9dcd-4c46-b0f0-7a37c952e5c3.png)
 
 ### Lab Part 2 [Day 4] - Plug-in the Customized Inverter Cell to OpenLane:
 
