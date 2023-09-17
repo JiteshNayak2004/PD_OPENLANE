@@ -956,11 +956,13 @@ drc check
 <details>
 <summary>Pre-layout Timing Analysis and Importance of Good Clock Tree</summary>
 
-### Lab Part 1 [Day 4] - Extracting the LEF File:   
+#### reusing previous runs
 To run previous flow, add tag to prep design:
 ```
 prep -design picorv32a -tag [date]
 ```
+
+### Lab Part 1 [Day 4] - Extracting the LEF File:   
 
 PnR tool does not need all informations from the `.mag` file like the logic part but only PnR boundaries, power/ground ports, and input/output ports. This is what a [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) actually contains. So the next step is to extract the LEF file from Magic. But first, we need to follow guidelines of the PnR tool for the standard cells:
  - The input and output ports lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). 
