@@ -303,21 +303,25 @@ We imprint the die multiple times in the chip.
 2. die and core
 
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/cdeac4a7-b399-41aa-8739-fa2fe9cf7382)
-4. let us start with basic netlsit 
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/af137b6b-2087-4886-9602-538cd771ad21)
-we are mostly intreseted in the dimensions of the standard cells.
 
-5. Lets start with rough dimensions of Standard cells and Flip flops as 1unit x 1unit, area = 1sq. unit
+let us start with basic netlsit
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/af137b6b-2087-4886-9602-538cd771ad21)
+
+we are mostly interested in the dimensions of the standard cells. Lets start with rough dimensions of Standard cells and Flip flops as 1unit x 1unit, area = 1sq. unit
+
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/08dd2fa7-4afb-4c8b-819e-7ce8fea2de30)
 
-6. lets calculate the area occupied by the netlist on a silicon wafer.
+lets calculate the area occupied by the netlist on a silicon wafer.
 arranging the cells and flip flops
-![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/db826254-a47e-49a2-b827-239ead80f07c)
 
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/db826254-a47e-49a2-b827-239ead80f07c)
 
 The netlist occuping 4sq. units in placed inside the core.
 In this case we are at 100% utilization of the core area, because the logial cells occupies the complete are of the core.
+
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/3a3e6708-ff78-42fe-9cc2-4274017e539e)
+
 Utilization Factor = (Area Occupied by netlist)/(Total Area of the Core)
 Utilization factor = 1
 
@@ -329,9 +333,12 @@ Aspect Ratio = 1(square chip)
 If the aspect ratio is other than 1, it means that the chip is in rectangular shape.
 
 lets take another example,
+
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/ab897fad-fd92-41cd-a5b9-bfc3d3d4540c)
+
 utilization factor = 0.5 (only 50% is being used, 50% is free)
 aspect ratio = 0.5 (rectangle chip)
+
 ![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/cd2ab491-a02b-45f2-b13c-df330070c693)
 
 
@@ -341,6 +348,8 @@ aspect ratio = 0.5 (rectangle chip)
 1. These are reusable complex logicblocks or modules or IPs or macros that is already implemented (memory, clock-gating cell, mux, comparator...) . The placement on the core is user-defined and must be done before placement and routing (thus preplaced cells). The automated place and route tools will not be able to touch and move these preplaced cells so this must be very well defined
 
 2. Surround preplaced cells with decoupling capacitors.The complex preplaced logicblock requires a high amount of current from the powersource for current switching. But since there is a distance between the main powersource and the logicblock, there will be voltage drop due to the resistance and inductance of the wire. This might cause the voltage at the logicblock to be not within the noise margin range anymore (logic is unstable). The solution is to use decoupling capacitors near the logic block, this capacitor will send enough current needed by the logicblock to switch within the noise margin range.
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/3b85d133-2a5e-44a6-8554-d6f3345edbeb)
 
 #### decoupling capacitors
 1. The purpose of the decoupling capacitor is to charge the circuit. When a switching activity occurs, the decoupling capacitor transfers some of its charge to the circuit.
@@ -358,8 +367,26 @@ aspect ratio = 0.5 (rectangle chip)
 1. Power planning in integrated circuit (IC) design involves the careful consideration and distribution of power and ground connections to ensure proper functionality and performance of the chip.
 2. One important aspect of power planning is the placement of multiple ground (GND) and supply voltage (VDD) points throughout the IC layout.
 3. The need for multiple GND and VDD points arises due to several reasons by providing multiple GND and VDD points, the power can be distributed more evenly throughout the chip, reducing the chances of voltage drops and improving overall power delivery efficiency.
-4. Ground bounce occurs when there are variations in the voltage levels of different GND points due to transient currents. This current flow to the ground creates an inductive effect,
-   which causes the ground voltage to rise or fall momentarily which can lead to logic's in ckts to change for a moment
+4. Ground bounce occurs when there are variations in the voltage levels of different GND points due to transient currents. This current flow to the ground creates an inductive effect,which causes the ground voltage to rise or fall momentarily which can lead to logic's in ckts to change for a moment
+#### example of ground bounce
+- We need to transfer the value long the red line.Lets assume the read line is a 16-bit bus and i connected to an inverter
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/f56ffe49-f7e3-46d7-a0b8-cf12788665f2)
+
+- At once all the ones are made zero, and zeros are made ones, due to this there is bump in the ground tap point as all 16-bit are connected to the same ground.
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/50c1d623-389a-4f23-aa66-101d33c11d05)
+
+- The phenomenon is called ground bounce and it will eventually settle down.
+If the capacitors are charging from low to high, there is a Voltage drop in the Supply Voltage.
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/b429b0d0-a38a-43e3-a44a-e789b0f43c38)
+
+- This issue is coming because we are having only one power supply, it was having multiple power supplies we would have this issue. Now we are going to have multiple power supplies.
+
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/52340a52-fa99-4336-95a5-46ec59b0677a)
+
+
 6. Similarly, power supply noise refers to fluctuations in the VDD levels caused by switching events.
 7. By strategically placing multiple GND and VDD points, the impact of ground bounce and power supply noise can be minimized, improving circuit performance and reducing the risk of functional failures.
 
