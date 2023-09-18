@@ -1083,9 +1083,10 @@ The solution for this error is found on [this issue thread](https://github.com/T
 ```
 magic -T /home/angelo/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &
 ```
-Select a single `sky130_myinverter` cell instance from the list dumped by grep (e.g. \_07237\_). On tkcon, command `% select cell _07237_` then ctrl+z to zoom into that cell. As shown below, our customized inverter cell `sky130_myinverter` is sucessfully placed on the core. Use `expand` on tkon to show the footprint of the cell and notice how the power and ground of sky130_myinverter overlaps the power and ground pins of its adjacent cells.  
+Select a single `sky130_myinverter` cell instance from the list dumped by grep (e.g. \14086\). On tkcon, command `% select cell _07237_` then ctrl+z to zoom into that cell. As shown below, our customized inverter cell `sky130_myinverter` is sucessfully placed on the core. Use `expand` on tkon to show the footprint of the cell and notice how the power and ground of sky130_myinverter overlaps the power and ground pins of its adjacent cells.  
 
-![image](https://user-images.githubusercontent.com/87559347/189507538-6d0c1b46-dc45-4768-b00c-01e8336ab518.png)
+![sky130_inv](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/0bcea254-695d-4d0b-bdd7-cd062842f825)
+
 
 
 
