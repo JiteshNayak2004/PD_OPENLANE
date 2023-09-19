@@ -1254,4 +1254,77 @@ When TritonCTS is building the branch clock tree, it tries each buffers listed i
 </details>
 
 
+<details>
+ <summary>final steps for rtl to gds using triton route and opensta </summary>
+
+
+ ### Maze Routing:
+One simple routing algorithm is Maze Routing or Lee's routing:
+- The shortest path is one that follows a steady increment of one (1-to-9 on the example below). There might be multiple path like this but the best path that the tool will choose is one with less bends. The route should not be diagonal and must not overlap an obstruction such as macros. 
+- This algorithm however has high run time and consume a lot of memory thus more optimized routing algorithm is preferred (but the principles stays the same where route with shortest path and less bends is preferred)  
+![image](https://user-images.githubusercontent.com/87559347/190376984-ff6f4f02-af4f-472d-9422-294157221e9f.png)
+
+ 
+### DRC Cleaning:
+DRC cleaning is the next step after routing. DRC cleaning is done to ensure the routes can be fabricated and printed in silicon faithfully. Most DRC is due to the constraints of the photolitographic machine for chip fabrication where the wavelength of light used is limited. There are thousands of DRC and some DRC are:
+1. Minimum wire width
+2. Minimum wire pitch (center to center spacing)
+3. Minimum wire spacing (edge to edge spacing)
+4. Signal short = this can be solved my moving the route to next layer using vias. This results in more DRC (Via width, Via Spacing, etc.). Higher metal layer must be wider than lower metal layer and this is another DRC.  
+
+![image](https://user-images.githubusercontent.com/87559347/190388545-6ae13766-ad6b-441a-986a-57bf70ffaf7b.png)
+
+### Power Distribution Network (review):
+This is just a review on PDN. The power and ground rails has a pitch of 2.72um thus the reason why the [customized inverter cell](https://github.com/nickson-jose/vsdstdcelldesign) has a height of 2.72 or else the power and ground rails will not be able to power up the cell. Looking at the LEF file `runs/[date]/tmp/merged.nom.lef`, you will notice that all cells are of height 2.72um and only width differs.   
+
+As shown below, power and ground flows from power/ground pads -> power/ground ring-> power/ground straps -> power/ground rails.
+
+![image](https://user-images.githubusercontent.com/87559347/190429025-49ab6e33-8a67-4cea-8086-86eb73122282.png)
+
+### Routing Stage and TritonRoute:
+OpenLane routing stage consists of two stages:
+ - Global Routing - Form routing guides that can route all the nets. The tool used is FastRoute
+ - Detailed Routing - Uses the global routing's guide to actually connect the pins with least amount of wire and bends. The tool used is TritonRoute.
+ 
+ **Triton Route**
+ - Performs detailed routing and honors the pre-processed route guides (made by global route) and uses MILP based (Mixed  Integer Linear Programming algorithm) panel routing scheme(uses panel as the grid guide for routing) with intra-layer parallel routing (routing happens simultaneously in a single layer) and inter-layer sequential layer (routing starts from bottom metal layer to top metal layer sequentially and not simultaneously). 
+ - Honors preferred direction of a layer. Metal layer direction is alternating (metal layer direction is specified in the LEF file e.g. met1 Horizontal, met2 Vertical, etc.) to reduce overlapping wires between layer and reduce potential capacitance which can degrade the signal.  
+ 
+ ![image](https://user-images.githubusercontent.com/87559347/190557016-163a2d31-b650-4924-b937-69e775a21213.png)
+Best reference for this the [Triton Route paper](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiHkP7pnZj6AhUFHqYKHcBlC3UQFnoECBEQAQ&url=https%3A%2F%2Fvlsicad.ucsd.edu%2FPublications%2FConferences%2F363%2Fc363.pdf&usg=AOvVaw0ywnaeyGqzqAjI6TaJnamd).
+
+### Lab Part 1 [Day 5] - Routing Stage:
+
+We will now finally do the routing, simply run `run_routing`. This will do both global and detailed routing, this will take multiple optimization iterations until the DRC violation is reduced to zero. The zeroth iteration has 27426 violations and only at the 8th iteration was all violations solved. The whole routing took 1 hour and 10 mins in my Linux machine with 2 cores. A fun fact: the die area is just 584um by 595um but the total wirelength used for routing spans to 0.5m!!!
+
+![image](https://user-images.githubusercontent.com/87559347/190680884-de08f5da-14b4-4e38-8d55-1bb8174d26d4.png)
+
+A DEF file will be formed `runs/[date]/results/routing/picorv32.def` Open the DEF file output of routing stage in Magic:
+```
+magic -T /home/vsduser/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def
+```
+Similar to what we did [when we plugged in the custom inverter cell](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop/edit/main/README.md#lab-part-3-day-4-fix-negative-slack), look for `sky130_myinverter` at the DEF file then search that cell instance in magic:
+![image](https://user-images.githubusercontent.com/87559347/190683374-77a0edfd-7d58-4172-8f3d-3533eb1f85d3.png)
+ 
+ ### Lab Part 2 [Day 5] - SPEF Extraction and GDSII Streaming:
+ 
+ Now that we verified the routing, run post-routing STA with `run_parasitics_sta`.
+ - First, this will do a [SPEF (Standard Parasitics Extraction Format) extraction](https://www.physicaldesign4u.com/2020/05/standard-parasitic-extraction-format.html) of the parasitics resistance and capacitance. 
+ - Then multi-corner STA will be done with the extracted SPEF.  
+ - SPEF extraction and multi-corner STA will be done on all three corners (min, max, nom).   
+ 
+ The delay due to the real-world parasitics will most likely worsen the slack for both hold and setup analysis. The extracted SPEF can be located under `runs/[date]/results/routing` and the STA log files under `runs/[date]/logs/signoff`. Timing ECO can be done to reduce the slack to the desired levels.
+ 
+The last stage will be to extract the GDSII file ready for fabrication, simply run `run_magic`. This uses Magic to stream the GDSII file `runs/[date]/results/signoff/picorv32.gds`. This GDSII file can then be read by Magic:
+
+![image](https://user-images.githubusercontent.com/87559347/190836579-b8650d62-d926-448d-a469-eb634ed207e2.png)
+
+We can then use [GDS3D](https://github.com/trilomix/GDS3D) to visualize the layout in 3D form:  
+![2022-09-17 11-33-26(3)](https://user-images.githubusercontent.com/87559347/190839568-cb773070-e80e-4bf6-9273-da6fb22e7343.gif)
+
+
+
+</details>
+
+
 
