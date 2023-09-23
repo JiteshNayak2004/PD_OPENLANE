@@ -1084,9 +1084,7 @@ magic -T /home/vsduser/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tec
 ```
 Select a single `sky130_myinverter` cell instance from the list dumped by grep (e.g. \14086\). On tkcon, command `% select cell _07237_` then ctrl+z to zoom into that cell. As shown below, our customized inverter cell `sky130_myinverter` is sucessfully placed on the core. Use `expand` on tkon to show the footprint of the cell and notice how the power and ground of sky130_myinverter overlaps the power and ground pins of its adjacent cells.  
 
-![sky130_inv](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/0bcea254-695d-4d0b-bdd7-cd062842f825)
-
-
+![image](https://github.com/JiteshNayak2004/PD_OPENLANE/assets/117510555/473b7f34-1905-49fd-a249-f49cd72863dc)
 
 
 ### Timing Analysis (Pre-Layout STA using Ideal Clocks):
